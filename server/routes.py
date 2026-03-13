@@ -1,37 +1,11 @@
 from flask import request, jsonify
-<<<<<<< HEAD
-from app import db, bcrypt
-from models import User, Task
-=======
-from server.app import db, bcrypt
+from server.extensions import db, bcrypt
 from server.models import User, Task, Project, Collaboration
 from datetime import datetime
->>>>>>> bce7e11 (added frontend)
 
 
 def register_routes(app):
 
-<<<<<<< HEAD
-    # REGISTER USER
-    @app.route("/register", methods=["POST"])
-    def register():
-
-        data = request.json
-
-        hashed_pw = bcrypt.generate_password_hash(
-            data["password"]).decode("utf-8")
-
-        user = User(
-            username=data["username"],
-            email=data["email"],
-            password=hashed_pw
-        )
-
-        db.session.add(user)
-        db.session.commit()
-
-        return jsonify({"message": "User created"}), 201
-=======
     # CREATE USER (alias)
     @app.route("/users", methods=["POST"])
     def create_user():
@@ -60,97 +34,22 @@ def register_routes(app):
     @app.route("/register", methods=["POST"])
     def register():
         return create_user()
->>>>>>> bce7e11 (added frontend)
 
 
     # LOGIN
     @app.route("/login", methods=["POST"])
     def login():
-<<<<<<< HEAD
-
-        data = request.json
-
-        user = User.query.filter_by(email=data["email"]).first()
-
-=======
         data = request.json
         if not data or not data.get("email") or not data.get("password"):
             return jsonify({"error": "Email and password required"}), 400
 
         user = User.query.filter_by(email=data["email"]).first()
->>>>>>> bce7e11 (added frontend)
         if user and bcrypt.check_password_hash(user.password, data["password"]):
             return jsonify({"message": "Login successful", "user_id": user.id})
 
         return jsonify({"error": "Invalid credentials"}), 401
 
 
-<<<<<<< HEAD
-    # CREATE TASK
-    @app.route("/tasks", methods=["POST"])
-    def create_task():
-
-        data = request.json
-
-        task = Task(
-            title=data["title"],
-            description=data["description"],
-            priority=data["priority"],
-            user_id=data["user_id"]
-        )
-
-        db.session.add(task)
-        db.session.commit()
-
-        return jsonify({"message": "Task created"})
-
-
-    # GET ALL TASKS
-    @app.route("/tasks", methods=["GET"])
-    def get_tasks():
-
-        tasks = Task.query.all()
-
-        task_list = []
-
-        for task in tasks:
-            task_list.append({
-                "id": task.id,
-                "title": task.title,
-                "description": task.description,
-                "priority": task.priority,
-                "completed": task.completed
-            })
-
-        return jsonify(task_list)
-
-
-    # UPDATE TASK
-    @app.route("/tasks/<int:id>", methods=["PATCH"])
-    def update_task(id):
-
-        task = Task.query.get(id)
-
-        data = request.json
-
-        task.completed = data.get("completed", task.completed)
-
-        db.session.commit()
-
-        return jsonify({"message": "Task updated"})
-
-
-    # DELETE TASK
-    @app.route("/tasks/<int:id>", methods=["DELETE"])
-    def delete_task(id):
-
-        task = Task.query.get(id)
-
-        db.session.delete(task)
-        db.session.commit()
-
-        return jsonify({"message": "Task deleted"})
-=======
     # PROJECTS
     @app.route("/projects", methods=["POST"])
     def create_project():
@@ -368,4 +267,3 @@ def register_routes(app):
             "tasks_by_category": {c: cnt for c, cnt in categories},
         })
 
->>>>>>> bce7e11 (added frontend)
