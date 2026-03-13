@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -23,3 +24,9 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 CORS(app)
+=======
+class Config: 
+    # Use password auth for Postgres (set by `ALTER USER postgres WITH PASSWORD 'password'`)
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:password@localhost/taskflow_db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+>>>>>>> bce7e116b972be40ba9676c01181d8d6474b5ab4
