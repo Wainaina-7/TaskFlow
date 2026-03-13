@@ -1,10 +1,8 @@
 from flask import request, jsonify
-from app import db, bcrypt
 from models import User, Task, Assignment
+from config import db, bcrypt
 
 def register_routes(app):
-
-    # user registration and authentication routes
     @app.route("/register", methods=["POST"])
     def register():
         data = request.json
@@ -29,14 +27,7 @@ def register_routes(app):
     @app.route("/users", methods=["GET"])
     def get_users():
         users = User.query.all()
-        user_list = []
-        for u in users:
-            user_list.append({
-                "id": u.id,
-                "username": u.username,
-                "email": u.email
-            })
-        return jsonify(user_list)
+        return jsonify([{"id": u.id, "username": u.username, "email": u.email} for u in users])
 
     @app.route("/tasks", methods=["POST"])
     def create_task():
@@ -54,17 +45,14 @@ def register_routes(app):
     @app.route("/tasks", methods=["GET"])
     def get_tasks():
         tasks = Task.query.all()
-        task_list = []
-        for t in tasks:
-            task_list.append({
-                "id": t.id,
-                "title": t.title,
-                "description": t.description,
-                "priority": t.priority,
-                "completed": t.completed,
-                "user_id": t.user_id
-            })
-        return jsonify(task_list)
+        return jsonify([{
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+            "priority": t.priority,
+            "completed": t.completed,
+            "user_id": t.user_id
+        } for t in tasks])
 
     @app.route("/tasks/<int:id>", methods=["PATCH"])
     def update_task(id):
@@ -85,16 +73,13 @@ def register_routes(app):
     @app.route("/assignments", methods=["GET"])
     def get_assignments():
         assignments = Assignment.query.all()
-        assignment_list = []
-        for a in assignments:
-            assignment_list.append({
-                "id": a.id,
-                "user_id": a.user_id,
-                "task_id": a.task_id,
-                "completed": a.completed,
-                "notes": a.notes
-            })
-        return jsonify(assignment_list)
+        return jsonify([{
+            "id": a.id,
+            "user_id": a.user_id,
+            "task_id": a.task_id,
+            "completed": a.completed,
+            "notes": a.notes
+        } for a in assignments])
 
     @app.route("/assignments", methods=["POST"])
     def create_assignment():
@@ -107,3 +92,27 @@ def register_routes(app):
         db.session.add(assignment)
         db.session.commit()
         return jsonify({"message": "Assignment created"}), 201
+
+    @app.route("/assignments/<int:id>", methods=["PATCH"])
+    def update_assignment(id):
+        assignment = Assignment.query.get(id)
+        if not assignment:
+            return jsonify({"error": "Assignment not found"}), 404
+        
+        data = request.json
+        if "completed" in data:
+            assignment.completed = data["completed"]
+        if "notes" in data:
+            assignment.notes = data["notes"]
+        
+        db.session.commit()
+        return jsonify({"message": "Assignment updated"}), 200
+
+    @app.route("/assignments/<int:id>", methods=["DELETE"])
+    def delete_assignment(id):
+        assignment = Assignment.query.get(id)
+        if not assignment:
+            return jsonify({"error": "Assignment not found"}), 404
+        db.session.delete(assignment)
+        db.session.commit()
+        return jsonify({"message": "Assignment deleted"}), 200

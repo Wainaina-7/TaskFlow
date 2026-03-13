@@ -1,7 +1,5 @@
-from flask_bcrypt import Bcrypt
 from config import db
 
-bcrypt = Bcrypt()
 
 class User(db.Model):
     __tablename__ = 'users'
