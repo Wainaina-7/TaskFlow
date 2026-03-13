@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt 
 from flask_cors import CORS
-from config import Config
+from server.config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -16,7 +16,7 @@ def create_app():
      migrate.init_app(app, db) 
      bcrypt.init_app(app) 
      CORS(app)
-     from routes import register_routes 
+     from server.routes import register_routes 
      register_routes(app)
      return app
 

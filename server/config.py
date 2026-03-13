@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ALL imports
 from flask import Flask
 from flask_cors import CORS
@@ -25,3 +26,9 @@ db.init_app(app)  # Initialize db with app
 api = Api(app)
 
 CORS(app)
+=======
+class Config: 
+    # Use password auth for Postgres (set by `ALTER USER postgres WITH PASSWORD 'password'`)
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:password@localhost/taskflow_db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+>>>>>>> bce7e11 (added frontend)
