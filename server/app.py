@@ -37,7 +37,7 @@ def debug_ls():
     
     return f"<pre>{output}</pre>"
 
-# The confirmed path to the React build folder on Render
+# Absolute path to React build folder - confirmed from debug endpoint
 REACT_BUILD_DIR = '/opt/render/project/src/client/build'
 
 # Serve static files from the React build folder
