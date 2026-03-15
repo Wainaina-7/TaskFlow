@@ -9,22 +9,22 @@ app = create_app()
 from routes import register_routes
 register_routes(app)
 
-# Define the path to the React build directory
+# Absolute path to React build folder - confirmed from debug endpoint
 REACT_BUILD_DIR = '/opt/render/project/src/client/build'
 
-# Serve static files explicitly
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    """Serve static files (CSS, JS, images) from the React build folder."""
-    return send_from_directory(os.path.join(REACT_BUILD_DIR, 'static'), filename)
-
-# Serve the main React app and handle all other routes
-@app.route('/', defaults={'path': ''})
+# Serve static files from the React build folder
 @app.route('/<path:path>')
-def serve_react(path):
-    """Serve the React app's index.html for all non-static routes."""
-    # If the path is not empty and is not a static file request, serve index.html
-    # This allows React Router to handle client-side routing.
+def serve_static_files(path):
+    """Serve any file from the React build directory if it exists."""
+    full_path = os.path.join(REACT_BUILD_DIR, path)
+    if os.path.exists(full_path) and os.path.isfile(full_path):
+        return send_from_directory(REACT_BUILD_DIR, path)
+    # If file doesn't exist, let the main route handle it
+    return serve_react('')
+
+@app.route('/')
+def serve_react(path=''):
+    """Serve the main React app."""
     return send_from_directory(REACT_BUILD_DIR, 'index.html')
 
 if __name__ == "__main__":
