@@ -1,16 +1,15 @@
 from config import create_app, db, bcrypt
 from models import User, Task, Assignment
-
-app = create_app()
-
-# Import routes after app is created to avoid circular imports
-from routes import register_routes
-register_routes(app)
-
-# minor change to test deployment
 import os
 from flask import send_from_directory
 
+app = create_app()
+
+# Import routes
+from routes import register_routes
+register_routes(app)
+
+# Serve React frontend
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_react(path):
