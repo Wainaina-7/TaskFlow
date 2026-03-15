@@ -1,111 +1,86 @@
-# TaskFlow
+# TaskFlow 
 
-TaskFlow is a full-stack task and project management app built with **Flask (Python)**, **React (Vite)**, and **PostgreSQL**.
-
-It demonstrates:
-- A structured data model with **Users**, **Projects**, **Tasks**, and **Collaborations**
-- A **Flask API** (CRUD endpoints) powered by **Flask-SQLAlchemy**
-- A modern **React frontend** using **React Router**, **Formik**, and **Yup**
-- Full **frontend/backend integration** using `fetch()`
-
----
+## Description
+TaskFlow is a task management application that allows teams to create tasks, assign them to multiple users, and track progress. Kind of like a mini- kanban app.
 
 ## Features
+- User registration and login
+- Create, edit, and delete tasks
+- Assign tasks to multiple users
+- Mark assignments as complete
+- Add personal notes to assignments
+- View all tasks, users, and assignments
 
-- Create, edit, and delete **tasks**
-- Create **projects**
-- Add collaborators to projects with roles (Manager / Developer / Viewer)
-- Track task status and assignment
+## Tech Stack
+- **Backend**: Flask, SQLAlchemy, Flask-Migrate, Flask-Bcrypt, Flask-CORS
+- **Frontend**: React, React Router, Formik, Yup
+- **Database**: SQLite (development), PostgreSQL (production)
 
----
+## Installation
 
-## Getting Started
+### Backend Setup
+```bash
+# After cloning the repository to your local machine, navigate to server directory.
+cd server
 
-### Backend (Flask)
+# Install dependencies
+pipenv install
 
-1. Activate the Python virtual environment:
-   ```bash
-   cd TaskFlow
-   source venv/bin/activate
-   ```
+# Enter the virtual environment
+pipenv shell
 
-2. Ensure PostgreSQL is running and create the DB:
-   ```bash
-   sudo -u postgres createdb taskflow_db
-   ```
+# Set up the database
+flask db init
+flask db migrate -m "initial migration"
+flask db upgrade
 
-   If you want to use a dedicated user/password (recommended):
-   ```bash
-   sudo -u postgres createuser taskflow_user
-   sudo -u postgres psql -c "ALTER USER taskflow_user WITH PASSWORD 'secret';"
-   sudo -u postgres createdb -O taskflow_user taskflow_db
-   ```
+# Run server
+python app.py
+```
 
-3. Point the backend to Postgres (preferred) by exporting a `DATABASE_URL`:
-   ```bash
-   export DATABASE_URL="postgresql://taskflow_user:secret@localhost:5432/taskflow_db"
-   ```
+### Frontend Setup
+```bash
+# In a new terminal, navigate to client file within the project folder.
+cd client
 
-   > If you don't set `DATABASE_URL`, TaskFlow will still work using a local SQLite file (`taskflow.db`).
+# Install dependencies
+npm install
 
-4. Start the backend:
-   ```bash
-   export FLASK_APP=server.app
-   flask run
-   ```
+# Start React app
+npm start
+```
+The app should start up at http://localhost:3000
 
-The backend will run at: `http://localhost:5000`
+## API Routes
+### Users
+GET /users - Get all users
 
----
+POST /register - Create new user
 
-### Frontend (React)
+POST /login - User login
 
-1. Open a new terminal and install dependencies:
-   ```bash
-   cd TaskFlow/frontend
-   npm install
-   ```
+### Tasks
+GET /tasks - Get all tasks
 
-2. Start the dev server:
-   ```bash
-   npm run dev -- --port 5173
-   ```
+POST /tasks - Create new task
 
-The frontend will run at: `http://localhost:5173`
+PATCH /tasks/<id> - Update task
 
----
+DELETE /tasks/<id> - Delete task
 
-## API Endpoints
+### Assignments
+GET /assignments - Get all assignments
 
-- `GET /` - health + endpoints list
-- `GET /users`, `POST /users`
-- `GET /projects`, `POST /projects`
-- `GET /tasks`, `POST /tasks`, `PATCH /tasks/:id`, `DELETE /tasks/:id`
-- `GET /collaborations`, `POST /collaborations`
+POST /assignments - Create new assignment
 
----
+PATCH /assignments/<id> - Update assignment
 
-## Contributing (Wainaina + Mark)
+DELETE /assignments/<id> - Delete assignment.
 
-### Backend (Python / Flask)
-- Add models and relationships in `server/models.py`
-- Add or update endpoints in `server/routes.py`
-- Update DB schema using Flask-Migrate migrations
+## Validation
+All forms use Formik for handling
 
-### Frontend (React)
-- Update UI in `frontend/src/pages/*`
-- Add new routes in `frontend/src/App.jsx`
-- Update style in `frontend/src/index.css`
-
----
-
-## Notes
-
-- The frontend communicates directly with the backend using `http://localhost:5000`.
-- If your backend is not reachable, check that PostgreSQL is running and the Flask dev server is up.
-
----
-
-### Authors
-- Wainaina (primary)
-- Mark (contributor)
+### Yup validation includes:
+- Required field validation
+- Minimum/maximum length validation
+- Email format validation
